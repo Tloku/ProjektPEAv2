@@ -8,8 +8,10 @@
 #include <stdlib.h> //abs func
 #include <sstream>
 
-int simulatedAnnealing(std::vector<std::vector<int>>, float , float , int , double);
+int simulatedAnnealing(std::vector<std::vector<int>>, float , float , int , double, int);
 void swapCities(int);
+void invertCities(int);
+void insertCity(int);
 int calculateDistance(std::vector<int>);
 std::vector<int> randomPathPermutation();
 double getProbability(int, double);
@@ -37,10 +39,9 @@ int main()
     srand(time(NULL));
 	loadINIFile();
 	//loadFromFile("instancje/si175.tsp");
-	//simulatedAnnealing(cities, 4000 * N, coolingRate, 40000 * N, 30 * N);
 }
 
-int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemperature, float coolingRate, int stopCriterium, double timeToLive)
+int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemperature, float coolingRate, int stopCriterium, double timeToLive, int optimalSolution)
 {
     double temperature = initialTemperature;
 	double temperatureWhenFound = 0.0;
@@ -49,18 +50,26 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 	double timeToFind = 0.0;
 	double timeWorking = 0.0;
 	std::clock_t counter;
-    int iterations = 0;
     int result = INT_MAX;
-    int previousDistance;
     int currentDistance;
 	counter = std::clock();
+	long iterations = 0;
 
 	while (temperature > 1.0) {
 		path = permutatedPath;
 		currentDistance = calculateDistance(path);
+		iterations++;
+
+		if (iterations > N*50 && calculateRelativeError(result, optimalSolution) > 15) {
+			iterations = 0;
+			temperature = initialTemperature / 1.1;
+			path = randomPathPermutation();
+		}
 
 		for (int i = stopCriterium; i > 0; i--) {
-			swapCities(N);
+			//swapCities(N);
+			//invertCities(N);
+			insertCity(N);
 			currentDistance = calculateDistance(path);
 			int distanceDifference = result - currentDistance;
 
@@ -76,7 +85,18 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 				break;
 			}
 			else {
-				std::swap(path[firstCity], path[secondCity]);
+				//std::swap(path[firstCity], path[secondCity]);
+				//std::reverse(path.begin() + firstCity, path.begin() + secondCity);
+
+				if (firstCity > secondCity) {
+					path.insert(path.begin() + firstCity, path[secondCity - 1]);
+					path.erase(path.begin() + secondCity);
+				}
+				else {
+					path.insert(path.begin() + secondCity, path[firstCity - 1]);
+					path.erase(path.begin() + (firstCity - 1));
+				}
+
 			}
 			timeWorking = (std::clock() - counter) / (double)CLOCKS_PER_SEC;
 
@@ -93,8 +113,8 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 				std::cout << "Temperatura koncowa: " << temperature << std::endl;
 				return result;
 			}
-			temperature = calculateTemperatureGeometric(temperature);
 		}
+		temperature = calculateTemperatureGeometric(temperature);
 	}
 }
 
@@ -143,6 +163,48 @@ void swapCities(int size)
     
     std::swap(path[firstCity], path[secondCity]);
 }
+
+void invertCities(int size)
+{
+	do {
+		firstCity = rand() % size;
+		secondCity = rand() % size;
+	} while (firstCity == secondCity || firstCity > secondCity);
+
+	std::reverse(path.begin()+firstCity, path.begin()+secondCity);
+}      
+
+void insertCity(int size)
+{
+	do {
+		firstCity = rand() % size;  // to miasto zostanie wstawione
+		secondCity = rand() % size; // w miejsce za tym miastem (jesli fC > sC, jeśli sC jest większe, to wtedy wstawianie odbywa się na odwrót)
+	} while (firstCity == secondCity);
+
+	if (firstCity > secondCity) {
+		path.insert(path.begin() + secondCity, path[firstCity - 1]);
+		path.erase(path.begin() + firstCity);
+	}
+	else {
+		path.insert(path.begin() + firstCity, path[secondCity - 1]);
+		path.erase(path.begin() + (secondCity - 1));
+	}
+
+	//TOOD : Ogarnij dla przypadku, gdzie fC lub sC jest 0
+
+
+	///*path.insert(path.begin() + 7, path[2]);
+	//path.erase(path.begin() + 2);*/
+	////jeśli secondCity > firstCity
+
+
+	//path.insert(path.begin() + 3, path[6]);
+	//path.erase(path.begin() + 7);
+	////jeśli firstCity > secondCity
+}
+ 
+
+
 
 int calculateDistance(std::vector<int> path)
 {
@@ -218,7 +280,7 @@ void loadINIFile()
 				std::cout << "\n";
 
 				counter[i] = std::clock();
-				solution[i] = simulatedAnnealing(cities, pow(N, 2), coolingRate, 3 * N, N * 5);
+				solution[i] = simulatedAnnealing(cities, pow(N, 2), coolingRate, 3 * N, N * 2, optimalSolution);
 				timer[i] = (std::clock() - counter[i]) / (double)CLOCKS_PER_SEC;
 				pathResult[i] = bestPath;
 				error[i] = calculateRelativeError(solution[i], optimalSolution);

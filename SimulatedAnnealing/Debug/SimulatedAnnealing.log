@@ -1,9 +1,8 @@
 ﻿  SimulatedAnnealing.cpp
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\SimulatedAnnealing\SimulatedAnnealing.cpp(33,32): warning C4305: 'initializing': truncation from 'double' to 'float'
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\SimulatedAnnealing\SimulatedAnnealing.cpp(37,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\SimulatedAnnealing\SimulatedAnnealing.cpp(54,9): warning C4101: 'previousDistance': unreferenced local variable
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\SimulatedAnnealing\SimulatedAnnealing.cpp(151,21): warning C4018: '<': signed/unsigned mismatch
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\SimulatedAnnealing\SimulatedAnnealing.cpp(221,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\SimulatedAnnealing\SimulatedAnnealing.cpp(168,6): warning C4101: 'weight': unreferenced local variable
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\SimulatedAnnealing\SimulatedAnnealing.cpp(99): warning C4715: 'simulatedAnnealing': not all control paths return a value
-  SimulatedAnnealing.vcxproj -> D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Symulowane wyżarzanie\SimulatedAnnealing\Debug\SimulatedAnnealing.exe
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\SimulatedAnnealing\SimulatedAnnealing.cpp(35,32): warning C4305: 'initializing': truncation from 'double' to 'float'
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\SimulatedAnnealing\SimulatedAnnealing.cpp(39,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\SimulatedAnnealing\SimulatedAnnealing.cpp(209,21): warning C4018: '<': signed/unsigned mismatch
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\SimulatedAnnealing\SimulatedAnnealing.cpp(279,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\SimulatedAnnealing\SimulatedAnnealing.cpp(226,6): warning C4101: 'weight': unreferenced local variable
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\SimulatedAnnealing\SimulatedAnnealing.cpp(119): warning C4715: 'simulatedAnnealing': not all control paths return a value
+  SimulatedAnnealing.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\SimulatedAnnealing\Debug\SimulatedAnnealing.exe
