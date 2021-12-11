@@ -8,7 +8,7 @@
 #include <stdlib.h> //abs func
 #include <sstream>
 
-int simulatedAnnealing(std::vector<std::vector<int>>, float , float , int , double);
+int simulatedAnnealing(std::vector<std::vector<int>>, float , float , long long, double);
 void swapCities(int);
 int calculateDistance(std::vector<int>);
 std::vector<int> randomPathPermutation();
@@ -40,7 +40,7 @@ int main()
 	//simulatedAnnealing(cities, 4000 * N, coolingRate, 40000 * N, 30 * N);
 }
 
-int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemperature, float coolingRate, int stopCriterium, double timeToLive)
+int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemperature, float coolingRate, long long stopCriterium, double timeToLive)
 {
     double temperature = initialTemperature;
 	double temperatureWhenFound = 0.0;
@@ -51,7 +51,6 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 	std::clock_t counter;
     int iterations = 0;
     int result = INT_MAX;
-    int previousDistance;
     int currentDistance;
 	counter = std::clock();
 
@@ -59,7 +58,7 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 		path = permutatedPath;
 		currentDistance = calculateDistance(path);
 
-		for (int i = stopCriterium; i > 0; i--) {
+		for (long long i = stopCriterium; i > 0; i--) {
 			swapCities(N);
 			currentDistance = calculateDistance(path);
 			int distanceDifference = result - currentDistance;
@@ -218,7 +217,7 @@ void loadINIFile()
 				std::cout << "\n";
 
 				counter[i] = std::clock();
-				solution[i] = simulatedAnnealing(cities, pow(N, 2), coolingRate, 3 * N, N * 5);
+				solution[i] = simulatedAnnealing(cities, pow(N, 2), coolingRate, pow(2, 14) * pow(N, 2), N * 15);
 				timer[i] = (std::clock() - counter[i]) / (double)CLOCKS_PER_SEC;
 				pathResult[i] = bestPath;
 				error[i] = calculateRelativeError(solution[i], optimalSolution);
