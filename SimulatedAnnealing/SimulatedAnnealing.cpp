@@ -8,11 +8,8 @@
 #include <stdlib.h> //abs func
 #include <sstream>
 
-<<<<<<< HEAD
-int simulatedAnnealing(std::vector<std::vector<int>>, float , float , long long, double);
-=======
+
 int simulatedAnnealing(std::vector<std::vector<int>>, float , float , int , double, int);
->>>>>>> 134c1e249fc63d0b307adefba5760ac677dc889e
 void swapCities(int);
 void invertCities(int);
 void insertCity(int);
