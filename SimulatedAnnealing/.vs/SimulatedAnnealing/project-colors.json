@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "c3d0661b-b73f-4b2a-acdd-43c4d1a76259": {
+      "ProjectGuid": "c3d0661b-b73f-4b2a-acdd-43c4d1a76259",
+      "DisplayName": "SimulatedAnnealing",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
