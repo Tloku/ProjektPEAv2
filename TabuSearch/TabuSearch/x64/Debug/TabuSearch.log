@@ -1,0 +1,4 @@
+﻿  tabuSearch.cpp
+D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Tabu Search\TabuSearch\TabuSearch\tabuSearch.cpp(37,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Tabu Search\TabuSearch\TabuSearch\tabuSearch.cpp(161,6): warning C4101: 'weight': unreferenced local variable
+  Compiler terminating.  Please wait.. Abort complete.
