@@ -54,24 +54,40 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 	std::clock_t counter;
     int result = INT_MAX;
     int currentDistance;
-	counter = std::clock();
 	long iterations = 0;
+	int maxError = 5;
 
+	if (N >= 30 && N < 50) {
+		maxError = 10;
+	}
+	else if (N >= 50 && N < 75) {
+		maxError = 15;
+	}
+	else if (N >= 75 && N < 100) {
+		maxError = 20;
+	}
+	else if (N >= 100 && N < 150) {
+		maxError = 30;
+	}
+	else if (N >= 150) {
+		maxError = 50;
+	}
+	counter = std::clock();
 	while (temperature > 1.0) {
 		path = permutatedPath;
 		currentDistance = calculateDistance(path);
 		iterations++;
 
-		if (iterations > N*50 && calculateRelativeError(result, optimalSolution) > 15) {
+		if (iterations > N*50 && calculateRelativeError(result, optimalSolution) > maxError) {
 			iterations = 0;
 			temperature = initialTemperature / 1.1;
 			path = randomPathPermutation();
 		}
 
 		for (int i = stopCriterium; i > 0; i--) {
-			//swapCities(N);
+			swapCities(N);
 			//invertCities(N);
-			insertCity(N);
+			//insertCity(N);
 
 			currentDistance = calculateDistance(path);
 			int distanceDifference = result - currentDistance;
@@ -88,22 +104,22 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 				break;
 			}
 			else {
-				//std::swap(path[firstCity], path[secondCity]);
+				std::swap(path[firstCity], path[secondCity]);
 				//std::reverse(path.begin() + firstCity, path.begin() + secondCity);
 
-				if (firstCity > secondCity) {
+			/*	if (firstCity > secondCity) {
 					path.insert(path.begin() + firstCity, path[secondCity - 1]);
 					path.erase(path.begin() + secondCity);
 				}
 				else {
 					path.insert(path.begin() + secondCity, path[firstCity - 1]);
 					path.erase(path.begin() + (firstCity - 1));
-				}
+				}*/
 
 			}
 			timeWorking = (std::clock() - counter) / (double)CLOCKS_PER_SEC;
 
-			if (timeWorking > timeToLive || (temperature > 1.0 && temperature < 2.0)) {
+			if (timeWorking > timeToLive || (temperature > 1.0 && temperature < 2.0) || calculateRelativeError(result, optimalSolution) <= maxError) {
 				std::cout << "Wynik: " << result << std::endl;
 				std::cout << "Droga: ";
 				for (auto i : bestPath) {
