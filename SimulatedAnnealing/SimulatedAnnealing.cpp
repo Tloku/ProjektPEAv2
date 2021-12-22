@@ -12,7 +12,6 @@
 int simulatedAnnealing(std::vector<std::vector<int>>, float , float , int , double, int);
 void swapCities(int);
 void invertCities(int);
-void insertCity(int);
 int calculateDistance(std::vector<int>);
 std::vector<int> randomPathPermutation();
 double getProbability(int, double);
@@ -21,8 +20,8 @@ void loadINIFile();
 void saveToCsv(std::string, int, int, std::vector<std::string>, std::vector<int>*, double*, int*, double*);
 double getRandomDoubleValue();
 double calculateRelativeError(int, int);
-double calculateTemperatureBoltzmann(double temperature);
-double calculateTemperatureCauchy(double temperature);
+double calculateTemperatureBoltzmann(double temperature, long k, float a, int b);
+double calculateTemperatureCauchy(double temperature, long k, float a, int b);
 double calculateTemperatureGeometric(double temperature);
 
 int firstCity, secondCity;
@@ -42,7 +41,6 @@ int main()
 	//loadFromFile("instancje/si175.tsp");
 }
 
-
 int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemperature, float coolingRate, int stopCriterium, double timeToLive, int optimalSolution)
 {
     double temperature = initialTemperature;
@@ -53,6 +51,7 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 	double timeWorking = 0.0;
 	std::clock_t counter;
     int result = INT_MAX;
+	long tempIterator = 1;
     int currentDistance;
 	long iterations = 0;
 	int maxError = 5;
@@ -77,17 +76,20 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 		path = permutatedPath;
 		currentDistance = calculateDistance(path);
 		iterations++;
-
+		tempIterator = 10;
 		if (iterations > N*50 && calculateRelativeError(result, optimalSolution) > maxError) {
 			iterations = 0;
 			temperature = initialTemperature / 1.1;
 			path = randomPathPermutation();
+			tempIterator = 10;
 		}
 
+		
+
 		for (int i = stopCriterium; i > 0; i--) {
-			swapCities(N);
-			//invertCities(N);
-			//insertCity(N);
+			//swapCities(N);
+			invertCities(N);
+		
 
 			currentDistance = calculateDistance(path);
 			int distanceDifference = result - currentDistance;
@@ -101,21 +103,12 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 
 			if (distanceDifference > 0 || (distanceDifference < 0 && getProbability(distanceDifference, temperature) > getRandomDoubleValue())) {
 				permutatedPath = path;
+				tempIterator++;
 				break;
 			}
 			else {
-				std::swap(path[firstCity], path[secondCity]);
-				//std::reverse(path.begin() + firstCity, path.begin() + secondCity);
-
-			/*	if (firstCity > secondCity) {
-					path.insert(path.begin() + firstCity, path[secondCity - 1]);
-					path.erase(path.begin() + secondCity);
-				}
-				else {
-					path.insert(path.begin() + secondCity, path[firstCity - 1]);
-					path.erase(path.begin() + (firstCity - 1));
-				}*/
-
+				//std::swap(path[firstCity], path[secondCity]);
+				std::reverse(path.begin() + firstCity, path.begin() + secondCity);
 			}
 			timeWorking = (std::clock() - counter) / (double)CLOCKS_PER_SEC;
 
@@ -133,18 +126,19 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 				return result;
 			}
 		}
-		temperature = calculateTemperatureGeometric(temperature);
+		temperature = calculateTemperatureCauchy(temperature, tempIterator, 0.99, N / (N-1));
 	}
+	return result;
 }
 
-double calculateTemperatureBoltzmann(double temperature)
+double calculateTemperatureBoltzmann(double temperature, long k, float a, int b) // T = T/(a+b*log(k))
 {
-	return -temperature / log(0.99);
+	return temperature / (a+b*log(k));
 }
 
-double calculateTemperatureCauchy(double temperature)
+double calculateTemperatureCauchy(double temperature, long k, float a, int b)	//T = T / (a+b*k)
 {
-	return temperature / 0.99;
+	return  10 * temperature / (a+b*k);
 }
 
 double calculateTemperatureGeometric(double temperature)
@@ -192,38 +186,6 @@ void invertCities(int size)
 
 	std::reverse(path.begin()+firstCity, path.begin()+secondCity);
 }      
-
-void insertCity(int size)
-{
-	do {
-		firstCity = rand() % size;  // to miasto zostanie wstawione
-		secondCity = rand() % size; // w miejsce za tym miastem (jesli fC > sC, jeśli sC jest większe, to wtedy wstawianie odbywa się na odwrót)
-	} while (firstCity == secondCity);
-
-	if (firstCity > secondCity) {
-		path.insert(path.begin() + secondCity, path[firstCity - 1]);
-		path.erase(path.begin() + firstCity);
-	}
-	else {
-		path.insert(path.begin() + firstCity, path[secondCity - 1]);
-		path.erase(path.begin() + (secondCity - 1));
-	}
-
-	//TOOD : Ogarnij dla przypadku, gdzie fC lub sC jest 0
-
-
-	///*path.insert(path.begin() + 7, path[2]);
-	//path.erase(path.begin() + 2);*/
-	////jeśli secondCity > firstCity
-
-
-	//path.insert(path.begin() + 3, path[6]);
-	//path.erase(path.begin() + 7);
-	////jeśli firstCity > secondCity
-}
- 
-
-
 
 int calculateDistance(std::vector<int> path)
 {
@@ -299,7 +261,7 @@ void loadINIFile()
 				std::cout << "\n";
 
 				counter[i] = std::clock();
-				solution[i] = simulatedAnnealing(cities, pow(N, 2), coolingRate, 3 * N, N * 2, optimalSolution);
+				solution[i] = simulatedAnnealing(cities, pow(N, 2), coolingRate, 15000 * N, N * 2, optimalSolution);
 				timer[i] = (std::clock() - counter[i]) / (double)CLOCKS_PER_SEC;
 				pathResult[i] = bestPath;
 				error[i] = calculateRelativeError(solution[i], optimalSolution);
@@ -320,7 +282,7 @@ void saveToCsv(std::string txtFileName, int iterations, int optimalSolution, std
 	double* timer, int* solution, double* error)
 {
 	std::fstream file;
-	std::string fileName = "test_out_SA.csv";
+	std::string fileName = "test_out_SA_invert_cauchy.csv";
 
 	file.open(fileName, std::ios::out | std::ios::app);
 

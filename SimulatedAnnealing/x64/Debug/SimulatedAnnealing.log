@@ -1,7 +1,7 @@
 ﻿  SimulatedAnnealing.cpp
 E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(36,32): warning C4305: 'initializing': truncation from 'double' to 'float'
 E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(40,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(303,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(250,6): warning C4101: 'weight': unreferenced local variable
-E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(139): warning C4715: 'simulatedAnnealing': not all control paths return a value
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(302,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(249,6): warning C4101: 'weight': unreferenced local variable
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(138): warning C4715: 'simulatedAnnealing': not all control paths return a value
   SimulatedAnnealing.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\x64\Debug\SimulatedAnnealing.exe

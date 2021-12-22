@@ -96,7 +96,7 @@ int tabuSearch(int optimalSolution)
 			tabuListSize += 3;
 		}
 
-		if (tabuListSize == 150) { //prawdziwy maksymalny rozmiar tabuList to zawsze 2/3*tabuListSize
+		if (tabuListSize == 75) { //prawdziwy maksymalny rozmiar tabuList to zawsze 2/3*tabuListSize
 			swapCities(N);
 			tabuList.clear();
 			tabuListSize = 0;
@@ -269,7 +269,7 @@ void saveToCsv(std::string txtFileName, int iterations, int optimalSolution, std
 	double* timer, int* solution, double* error)
 {
 	std::fstream file;
-	std::string fileName = "test_out_TS.csv";
+	std::string fileName = "test_out_TS_tabuList_25.csv";
 
 	file.open(fileName, std::ios::out | std::ios::app);
 
