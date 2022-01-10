@@ -185,6 +185,39 @@ void invertCities(int size)
 	std::reverse(path.begin()+firstCity, path.begin()+secondCity);
 }      
 
+<<<<<<< HEAD
+void insertCity(int size)
+{
+	do {
+		firstCity = rand() % size;  // to miasto zostanie wstawione
+		secondCity = rand() % size; // w miejsce za tym miastem (jesli fC > sC, jeśli sC jest większe, to wtedy wstawianie odbywa się na odwrót)
+	} while (firstCity == secondCity);
+
+	if (firstCity > secondCity) {
+		path.insert(path.begin() + secondCity, path[firstCity - 1]);
+		path.erase(path.begin() + firstCity);
+	}
+	else {
+		path.insert(path.begin() + firstCity, path[secondCity - 1]);
+		path.erase(path.begin() + (secondCity - 1));
+	}
+
+	//TOOD : Ogarnij dla przypadku, gdzie fC lub sC jest 0
+
+
+	///*path.insert(path.begin() + 7, path[2]);
+	//path.erase(path.begin() + 2);*/
+	////jeśli secondCity > firstCity
+
+
+	//path.insert(path.begin() + 3, path[6]);
+	//path.erase(path.begin() + 7);
+	////jeśli firstCity > secondCity
+}
+ 
+
+=======
+>>>>>>> 1431e0b2535438501778dce2f35573a15015b0f1
 int calculateDistance(std::vector<int> path)
 {
     int cost = 0;
