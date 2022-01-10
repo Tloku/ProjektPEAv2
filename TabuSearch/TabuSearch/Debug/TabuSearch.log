@@ -1,5 +1,5 @@
 ﻿  tabuSearch.cpp
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Tabu Search\TabuSearch\TabuSearch\tabuSearch.cpp(37,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Tabu Search\TabuSearch\TabuSearch\tabuSearch.cpp(138,21): warning C4018: '<': signed/unsigned mismatch
-D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Tabu Search\TabuSearch\TabuSearch\tabuSearch.cpp(161,6): warning C4101: 'weight': unreferenced local variable
-  TabuSearch.vcxproj -> D:\Studia\Semestr 5\Projektowanie Efektywnych Algorytmów\Tabu Search\TabuSearch\Debug\TabuSearch.exe
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\TabuSearch\TabuSearch\tabuSearch.cpp(36,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\TabuSearch\TabuSearch\tabuSearch.cpp(153,21): warning C4018: '<': signed/unsigned mismatch
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\TabuSearch\TabuSearch\tabuSearch.cpp(181,6): warning C4101: 'weight': unreferenced local variable
+  TabuSearch.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 - simulated annealing\TabuSearch\Debug\TabuSearch.exe

@@ -17,7 +17,7 @@ int calculateDistance(std::vector<int>);
 void swapCities(int);
 std::vector<int> findBestNeighbour();
 bool checkIfMoveIsInTabu(int, int);
-int tabuSearch();
+int tabuSearch(int);
 
 int firstCity, secondCity;
 int citiesChanged[2];
@@ -38,42 +38,84 @@ int main()
 }
 
 
-int tabuSearch()
+int tabuSearch(int optimalSolution)
 {
-	int solution = 0;
 	path.resize(N);
 	int iterations = 0;
-	long cos = 2100;
+	int constCriterium = 15000;
+	long stopCriterium = constCriterium*N;
 	path = randomPathPermutation();
 	int bestPathDistance = calculateDistance(path);
 	bestPath = path;
+	double timeToLive = 2 * N;
+	double timeWorking = 0.0;
+	double timeToFind = 0.0;
+	int maxError = 5;
 
-	while (cos) {
-		path = findBestNeighbour();
-		int currentPathDistance = calculateDistance(path);
-
-		if (currentPathDistance <= bestPathDistance) {
-			bestPath = path;
-			bestPathDistance = currentPathDistance;
-			iterations = 0;
-		}
-		else {
-			iterations++;
-			tabuList.push_back(citiesChanged[0]);
-			tabuList.push_back(citiesChanged[1]);
-		}
-
-		if (iterations == 100) {
-			iterations = 0;
-			swapCities(N);
-
-			tabuList.clear();
-		}
-		cos--;
+	if (N >= 30 && N < 50) {
+		maxError = 10;
+	}
+	else if (N >= 50 && N < 75) {
+		maxError = 15;
+	}
+	else if (N >= 75 && N < 100) {
+		maxError = 20;
+	}
+	else if (N >= 100 && N < 150) {
+		maxError = 30;
+	}
+	else if (N >= 150) {
+		maxError = 50;
 	}
 
-	solution = bestPathDistance;
-	return solution;
+	start = std::clock();
+	while (stopCriterium) {
+		stopCriterium--;
+		iterations++;
+
+		if (calculateRelativeError(bestPathDistance, optimalSolution) > maxError && iterations > N*50){
+			path = randomPathPermutation();
+			constCriterium -= 10;
+			iterations = 0;
+		}
+
+		path = findBestNeighbour();
+		int currentPathDistance = calculateDistance(path);
+		int distanceDifference = bestPathDistance - currentPathDistance;
+
+		if (distanceDifference > 0) {
+			bestPath = path;
+			bestPathDistance = currentPathDistance;
+			timeToFind = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+			stopCriterium = constCriterium * N;
+		}
+		else {
+			tabuList.push_back(citiesChanged[0]);
+			tabuList.push_back(citiesChanged[1]);
+			tabuList.push_back(INT_MAX); //INT_MAX s³u¿y jako przerwa pomiêdzy ruchami zawartymi w tablicy
+			tabuListSize += 3;
+		}
+
+		if (tabuListSize == 75) { //prawdziwy maksymalny rozmiar tabuList to zawsze 2/3*tabuListSize
+			swapCities(N);
+			tabuList.clear();
+			tabuListSize = 0;
+		}
+
+		timeWorking = (std::clock() - start) / (double)CLOCKS_PER_SEC;
+
+		if (timeWorking > timeToLive || calculateRelativeError(bestPathDistance, optimalSolution) <= maxError) {
+			std::cout << "Wynik: " << bestPathDistance << std::endl;
+			std::cout << "Droga: ";
+			for (auto i : bestPath) {
+				std::cout << i << " ";
+			}
+			std::cout << std::endl;
+			std::cout << "Czas szukania najlepszego wyniku: " << timeToFind << " [s]" << std::endl;
+			return bestPathDistance;
+		}
+	}
+	return bestPathDistance;
 }
 
 std::vector<int> findBestNeighbour()
@@ -144,6 +186,11 @@ void swapCities(int size)
 	std::swap(path[firstCity], path[secondCity]);
 }
 
+double calculateRelativeError(int result, int optimalSolution)
+{
+	return ((abs((double)optimalSolution - (double)result) / (double)optimalSolution) * 100);
+}
+
 void loadINIFile()
 {
 	std::fstream file;
@@ -191,7 +238,6 @@ void loadINIFile()
 				error[k] = 0;
 			}
 
-
 			for (int i = 0; i < iterations; i++) {
 				loadFromFile(txtFileName);
 				std::cout << "Plik: " << txtFileName << "\n";
@@ -202,7 +248,7 @@ void loadINIFile()
 				std::cout << "\n";
 
 				counter[i] = std::clock();
-				solution[i] = tabuSearch();
+				solution[i] = tabuSearch(optimalSolution);
 				timer[i] = (std::clock() - counter[i]) / (double)CLOCKS_PER_SEC;
 				pathResult[i] = bestPath;
 				error[i] = calculateRelativeError(solution[i], optimalSolution);
@@ -223,7 +269,7 @@ void saveToCsv(std::string txtFileName, int iterations, int optimalSolution, std
 	double* timer, int* solution, double* error)
 {
 	std::fstream file;
-	std::string fileName = "test_out_TS.csv";
+	std::string fileName = "test_out_TS_tabuList_25.csv";
 
 	file.open(fileName, std::ios::out | std::ios::app);
 
@@ -276,9 +322,4 @@ void loadFromFile(std::string fileName)
 	}
 	cities = tmpVec;
 	file.close();
-}
-
-double calculateRelativeError(int result, int optimalSolution)
-{
-	return ((abs((double)optimalSolution - (double)result) / (double)optimalSolution) * 100);
 }
