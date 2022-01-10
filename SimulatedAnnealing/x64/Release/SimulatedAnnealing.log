@@ -1,0 +1,12 @@
+﻿  SimulatedAnnealing.cpp
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(35,32): warning C4305: 'initializing': truncation from 'double' to 'float'
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(39,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(127,86): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(262,49): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\SimulatedAnnealing.cpp(209,6): warning C4101: 'weight': unreferenced local variable
+  Generating code
+  7 of 492 functions ( 1.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    4 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  SimulatedAnnealing.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\SimulatedAnnealing\x64\Release\SimulatedAnnealing.exe

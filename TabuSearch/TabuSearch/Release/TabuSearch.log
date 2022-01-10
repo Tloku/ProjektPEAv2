@@ -3,7 +3,7 @@ E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\TabuSearch
 E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\TabuSearch\TabuSearch\tabuSearch.cpp(171,21): warning C4018: '<': signed/unsigned mismatch
 E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\TabuSearch\TabuSearch\tabuSearch.cpp(199,6): warning C4101: 'weight': unreferenced local variable
   Generating code
-  2 of 485 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  1 of 485 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

@@ -84,11 +84,9 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 			tempIterator = 10;
 		}
 
-		
-
 		for (int i = stopCriterium; i > 0; i--) {
-			//swapCities(N);
-			invertCities(N);
+			swapCities(N);
+			//invertCities(N);
 		
 
 			currentDistance = calculateDistance(path);
@@ -107,8 +105,8 @@ int simulatedAnnealing(std::vector<std::vector<int>> cities, float initialTemper
 				break;
 			}
 			else {
-				//std::swap(path[firstCity], path[secondCity]);
-				std::reverse(path.begin() + firstCity, path.begin() + secondCity);
+				std::swap(path[firstCity], path[secondCity]);
+				//std::reverse(path.begin() + firstCity, path.begin() + secondCity);
 			}
 			timeWorking = (std::clock() - counter) / (double)CLOCKS_PER_SEC;
 
@@ -282,7 +280,7 @@ void saveToCsv(std::string txtFileName, int iterations, int optimalSolution, std
 	double* timer, int* solution, double* error)
 {
 	std::fstream file;
-	std::string fileName = "test_out_SA_invert_cauchy.csv";
+	std::string fileName = "test_out_SA_.csv";
 
 	file.open(fileName, std::ios::out | std::ios::app);
 
