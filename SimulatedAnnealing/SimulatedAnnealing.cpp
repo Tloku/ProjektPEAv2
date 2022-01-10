@@ -207,8 +207,6 @@ void insertCity(int size)
 }
  
 
-
-
 int calculateDistance(std::vector<int> path)
 {
     int cost = 0;
