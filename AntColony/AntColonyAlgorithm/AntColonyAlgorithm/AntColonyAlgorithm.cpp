@@ -33,7 +33,6 @@ float visibility; // visibility is reciprocal of the distance between two cities
 
 int main()
 {
-    std::cout << "Hello World!\n";
 }
 
 

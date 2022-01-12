@@ -1,0 +1,5 @@
+﻿  Ant.cpp
+  AntColonyAlgorithm.cpp
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(86,6): warning C4101: 'weight': unreferenced local variable
+  Generating Code...
+  AntColonyAlgorithm.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\AntColony\AntColonyAlgorithm\x64\Debug\AntColonyAlgorithm.exe

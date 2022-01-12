@@ -139,7 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ant.cpp" />
     <ClCompile Include="AntColonyAlgorithm.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ant.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
