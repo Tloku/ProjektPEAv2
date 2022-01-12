@@ -10,8 +10,7 @@ private:
 	int currentCity;
 	int size;
 
-private:
-	
+public:
 	Ant();
 	Ant(int n, int initialCity);
 

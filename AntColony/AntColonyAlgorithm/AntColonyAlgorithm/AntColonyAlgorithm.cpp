@@ -7,64 +7,173 @@
 #include <ctime>
 #include <stdlib.h> //abs func
 #include <sstream>
+#include "Ant.h"
+#include <random>
 
-std::vector<int> randomPathPermutation();
-int calculateDistance(std::vector<int> path);
 void loadINIFile();
 void saveToCsv(std::string txtFileName, int iterations, int optimalSolution, std::vector<std::string> optimalPath, std::vector<int>* pathResult,
 	double* timer, int* solution, double* error);
 void loadFromFile(std::string fileName);
 double calculateRelativeError(int, int);
-double getRandomDoubleValue();
-double calculateRelativeError(int result, int optimalSolution);
+void initAntsVector();
+void initPheromoneMatirx();
+int chooseCity(int antIndex);
+void calculateProbabilityOfChoosingCity(int antIndex);
+float getRandomFloat(float a, float b);
+void runAllAnts();
+void runOneAnt(int antIndex);
+void placePheromoneDAS(int fromCity, int toCity);
+void reducePheromone();
+void startAntColonyAlgorithm();
 
 std::vector<std::vector<int>> cities;
-std::vector<std::vector<int>> pheromoneMatrix;
-std::vector<int> tabuList;
+std::vector<std::vector<double>> pheromoneMatrix;
+std::vector<float> probabilty;
 std::vector<int> path;
+std::vector<Ant> antsVector;
+int bestCost = INT_MAX;
+std::vector<int> bestPath;
+const float INITIAL_PHERO_VALUE = 0.5;
+const float RANDOM_PR_VALUE = 0.15;
 double* timer;
 int* solution;
 std::clock_t start;
 int N;
 int M; //Number of ants
-float alpha, beta, p, evaporation; // p contains in <0, 1>
+float alpha, beta, p; // p contains in <0, 1>
 float visibility; // visibility is reciprocal of the distance between two cities
-
+const float qDASConstant = 0.2;
+const float evaporation = 0.1;
 
 int main()
 {
+	loadINIFile();
+	
+
 }
 
+void startAntColonyAlgorithm() {
 
-std::vector<int> randomPathPermutation()
-{
-	std::vector<int> tempToSwap(N);
-	int iter = 0;
-	for (auto i = 0; i < N; i++) {
-		tempToSwap[i] = i;
+}
+
+int chooseCity(int antIndex) {
+	if (getRandomFloat(0.01, 0.5) < RANDOM_PR_VALUE) {
+		int randomCity = rand() % N;
+		int index = -1; 
+		for (int i = 0; i < N; i++) {
+			if (!antsVector[antIndex].checkIfCityIsVisited(i)) {
+				index++;
+			}
+			if (index == randomCity) {
+				return index;
+			}
+		}
 	}
-	std::random_shuffle(tempToSwap.begin(), tempToSwap.end());
-	return tempToSwap;
-}
 
-int calculateDistance(std::vector<int> path)
-{
-	int cost = 0;
-	for (auto i = 0; i < path.size() - 1; i++) {
-		cost += cities[path[i]][path[i + 1]];
+	calculateProbabilityOfChoosingCity(antIndex);
+
+	float tmp = getRandomFloat(0.45, 1.0);
+	while (true) {
+		int index = rand() % N;
+		float probabilities = probabilty[index];
+
+		if (probabilities >= tmp) {
+			return probabilty[index];
+		}
+
+		if (probabilities != 0.0) {
+			probabilty[index] += 0.2;
+			probabilities = probabilty[index];
+		}
 	}
-	cost += cities[path[N - 1]][path[0]];
-	return cost;
 }
 
-double getRandomDoubleValue()
-{
-	return ((double)rand() / RAND_MAX + 1.0);
+void calculateProbabilityOfChoosingCity(int antIndex) {
+	int currentCity = antsVector[antIndex].getCurrentCity();
+	float nominator = 0.0;
+	float denominator = 0.0;
+	for (int i = 0; i < N; i++) {
+		if (!antsVector[antIndex].checkIfCityIsVisited(i)) {
+			denominator += (float)pow(pheromoneMatrix[currentCity][i], alpha) * pow((float)1.0 / cities[currentCity][i], beta);
+		}
+	}
+
+	for (int i = 0; i < N; i++) {
+		if (antsVector[antIndex].checkIfCityIsVisited(i)) {
+			probabilty[i] = 0.0;
+		}
+		else {
+			nominator = (float)pow(pheromoneMatrix[currentCity][i], alpha) * pow((float)1.0 / cities[currentCity][i], beta);
+			probabilty[i] = nominator / denominator;
+		}
+	}
 }
 
-double calculateRelativeError(int result, int optimalSolution)
+float getRandomFloat(float a, float b)
 {
-	return ((abs((double)optimalSolution - (double)result) / (double)optimalSolution) * 100);
+	static std::default_random_engine e;
+	static std::uniform_real_distribution<> dis(a, b); 
+	return dis(e);
+}
+
+void runAllAnts() {
+	for (int i = 0; i < antsVector.size(); i++) {
+		runOneAnt(i);
+	}
+}
+
+void runOneAnt(int antIndex) {
+	reducePheromone();
+	int currentCity;
+	while (!antsVector[antIndex].checkIfAllCitiesAreVisited()) {
+		currentCity = antsVector[antIndex].getCurrentCity();
+		int nextCity = chooseCity(antIndex); 
+		antsVector[antIndex].moveAnt(nextCity);
+		placePheromoneDAS(currentCity, nextCity);
+		antsVector[antIndex].calculateTotalDistance(cities[currentCity][nextCity]);
+	}
+
+	currentCity = antsVector[antIndex].getCurrentCity();
+	int initialCity = antsVector[antIndex].getInitialCity();
+	antsVector[antIndex].moveAnt(initialCity);
+	placePheromoneDAS(currentCity, initialCity);	
+	antsVector[antIndex].calculateTotalDistance(cities[currentCity][initialCity]);
+
+	if (bestCost > antsVector[antIndex].getTotalDistance()) {
+		bestCost = antsVector[antIndex].getTotalDistance();
+		bestPath = antsVector[antIndex].getAntPath();
+	}
+}
+
+void placePheromoneDAS(int fromCity, int toCity) {
+	pheromoneMatrix[fromCity][toCity] += qDASConstant;
+}
+
+void reducePheromone() {
+	for (int i = 0; i < pheromoneMatrix.size(); i++) {
+		for (int j = 0; j < pheromoneMatrix.size(); j++) {
+			pheromoneMatrix[i][j] *= (1 - evaporation);
+		}
+	}
+}
+
+void initPheromoneMatirx()
+{
+	for (int i = 0; i < pheromoneMatrix.size(); i++) {
+		for (int j = 0; j < pheromoneMatrix.size(); j++) {
+			pheromoneMatrix[i][j] = INITIAL_PHERO_VALUE;
+		}
+	}
+}
+
+void initAntsVector()
+{
+	antsVector.resize(N);
+	int i = 0;
+	for (Ant ant : antsVector) {
+		Ant tmpAnt = Ant(N, i++);
+		ant = tmpAnt;
+	}
 }
 
 void loadINIFile()
@@ -197,4 +306,9 @@ void loadFromFile(std::string fileName)
 	}
 	cities = tmpVec;
 	file.close();
+}
+
+double calculateRelativeError(int result, int optimalSolution)
+{
+	return ((abs((double)optimalSolution - (double)result) / (double)optimalSolution) * 100);
 }
