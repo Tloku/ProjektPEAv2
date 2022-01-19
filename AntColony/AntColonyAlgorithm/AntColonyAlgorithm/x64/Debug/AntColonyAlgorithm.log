@@ -1,5 +1,17 @@
-﻿  Ant.cpp
-  AntColonyAlgorithm.cpp
-E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(86,6): warning C4101: 'weight': unreferenced local variable
-  Generating Code...
-  AntColonyAlgorithm.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5\AntColony\AntColonyAlgorithm\x64\Debug\AntColonyAlgorithm.exe
+﻿  AntColonyAlgorithm.cpp
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(58,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(178,5): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(208,38): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(211,23): warning C4244: 'initializing': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=double
+          ]
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(219,37): warning C4244: '=': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=double
+          ]
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(262,12): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(293,6): warning C4101: 'weight': unreferenced local variable
+  AntColonyAlgorithm.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\x64\Debug\AntColonyAlgorithm.exe

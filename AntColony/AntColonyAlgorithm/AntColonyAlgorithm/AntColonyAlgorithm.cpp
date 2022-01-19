@@ -16,109 +16,106 @@ void saveToCsv(std::string txtFileName, int iterations, int optimalSolution, std
 void loadFromFile(std::string fileName);
 double calculateRelativeError(int, int);
 void initAntsVector();
-void initPheromoneMatirx();
+void initProbabilityVector();
+void initPheromoneMatrix();
 int chooseCity(int antIndex);
 void calculateProbabilityOfChoosingCity(int antIndex);
 float getRandomFloat(float a, float b);
 void runAllAnts();
 void runOneAnt(int antIndex);
 void placePheromoneDAS(int fromCity, int toCity);
+void placePheromoneCAS();
 void reducePheromone();
-void startAntColonyAlgorithm();
+int calculateApproximatePathCost();
+void setPheroValue();
+int startAntColonyAlgorithm(int iterations);
+std::vector<int> randomPathPermutation();
+int calculateDistance(std::vector<int> path);
 
 std::vector<std::vector<int>> cities;
 std::vector<std::vector<double>> pheromoneMatrix;
-std::vector<float> probabilty;
+
 std::vector<int> path;
 std::vector<Ant> antsVector;
 int bestCost = INT_MAX;
 std::vector<int> bestPath;
-const float INITIAL_PHERO_VALUE = 0.5;
-const float RANDOM_PR_VALUE = 0.15;
+double pheroValue;
+const double RANDOM_PR_VALUE = 0.3;
 double* timer;
 int* solution;
 std::clock_t start;
 int N;
 int M; //Number of ants
-float alpha, beta, p; // p contains in <0, 1>
-float visibility; // visibility is reciprocal of the distance between two cities
-const float qDASConstant = 0.2;
-const float evaporation = 0.1;
+std::vector<double> probability;
+double alpha = 1;
+double beta = 3;
+const double qDASConstant = 0.55;
+const double evaporation = 0.5;
+const double Qcycl = 100;
 
 int main()
 {
+	srand(time(NULL));
 	loadINIFile();
-	
-
 }
 
-void startAntColonyAlgorithm() {
+int startAntColonyAlgorithm(int iterations) {
+	for (int i = 0; i < iterations; i++) {
+		M = N;
+		initAntsVector();
+		initProbabilityVector();
+		setPheroValue();
+		initPheromoneMatrix();
+		runAllAnts();
+	}
 
+	return bestCost;
 }
 
-int chooseCity(int antIndex) {
-	if (getRandomFloat(0.01, 0.5) < RANDOM_PR_VALUE) {
-		int randomCity = rand() % N;
-		int index = -1; 
-		for (int i = 0; i < N; i++) {
-			if (!antsVector[antIndex].checkIfCityIsVisited(i)) {
-				index++;
-			}
-			if (index == randomCity) {
-				return index;
-			}
-		}
-	}
-
-	calculateProbabilityOfChoosingCity(antIndex);
-
-	float tmp = getRandomFloat(0.45, 1.0);
-	while (true) {
-		int index = rand() % N;
-		float probabilities = probabilty[index];
-
-		if (probabilities >= tmp) {
-			return probabilty[index];
-		}
-
-		if (probabilities != 0.0) {
-			probabilty[index] += 0.2;
-			probabilities = probabilty[index];
-		}
-	}
+void initProbabilityVector() {
+	probability.resize(N, 0.0001);
 }
 
-void calculateProbabilityOfChoosingCity(int antIndex) {
-	int currentCity = antsVector[antIndex].getCurrentCity();
-	float nominator = 0.0;
-	float denominator = 0.0;
-	for (int i = 0; i < N; i++) {
-		if (!antsVector[antIndex].checkIfCityIsVisited(i)) {
-			denominator += (float)pow(pheromoneMatrix[currentCity][i], alpha) * pow((float)1.0 / cities[currentCity][i], beta);
-		}
-	}
-
-	for (int i = 0; i < N; i++) {
-		if (antsVector[antIndex].checkIfCityIsVisited(i)) {
-			probabilty[i] = 0.0;
-		}
-		else {
-			nominator = (float)pow(pheromoneMatrix[currentCity][i], alpha) * pow((float)1.0 / cities[currentCity][i], beta);
-			probabilty[i] = nominator / denominator;
-		}
-	}
-}
-
-float getRandomFloat(float a, float b)
+void initAntsVector()
 {
-	static std::default_random_engine e;
-	static std::uniform_real_distribution<> dis(a, b); 
-	return dis(e);
+	antsVector.resize(N);
+	for (int i = 0; i < antsVector.size(); i++) {
+		Ant tmpAnt = Ant(N, i);
+		antsVector[i] = tmpAnt;
+	}
+}
+
+void setPheroValue() {
+	pheroValue = (float)M / calculateApproximatePathCost();
+}
+
+int calculateApproximatePathCost() {
+	int iterations = 100;
+	long totalCost = 0;
+	for (int i = 0; i < iterations; i++) {
+		std::vector<int> path = randomPathPermutation();
+		totalCost += calculateDistance(path);
+	}
+
+	return totalCost / iterations;
+}
+
+void initPheromoneMatrix()
+{
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			pheromoneMatrix[i][j] = pheroValue;
+		}
+	}
 }
 
 void runAllAnts() {
 	for (int i = 0; i < antsVector.size(); i++) {
 		runOneAnt(i);
+	}
+	placePheromoneCAS();
+	for (int i = 0; i < antsVector.size(); i++) {
+		antsVector[i].clear();
 	}
 }
 
@@ -127,16 +124,16 @@ void runOneAnt(int antIndex) {
 	int currentCity;
 	while (!antsVector[antIndex].checkIfAllCitiesAreVisited()) {
 		currentCity = antsVector[antIndex].getCurrentCity();
-		int nextCity = chooseCity(antIndex); 
+		int nextCity = chooseCity(antIndex);
 		antsVector[antIndex].moveAnt(nextCity);
-		placePheromoneDAS(currentCity, nextCity);
+		//placePheromoneDAS(currentCity, nextCity);
 		antsVector[antIndex].calculateTotalDistance(cities[currentCity][nextCity]);
 	}
 
 	currentCity = antsVector[antIndex].getCurrentCity();
 	int initialCity = antsVector[antIndex].getInitialCity();
 	antsVector[antIndex].moveAnt(initialCity);
-	placePheromoneDAS(currentCity, initialCity);	
+	//placePheromoneDAS(currentCity, initialCity);
 	antsVector[antIndex].calculateTotalDistance(cities[currentCity][initialCity]);
 
 	if (bestCost > antsVector[antIndex].getTotalDistance()) {
@@ -149,31 +146,131 @@ void placePheromoneDAS(int fromCity, int toCity) {
 	pheromoneMatrix[fromCity][toCity] += qDASConstant;
 }
 
+void placePheromoneCAS() {
+	int cost = 0;
+	int min = INT_MAX;
+	std::vector<int> greedyBestPath;
+
+	for (int i = 0; i < N; i++) {
+		cost = antsVector[i].getTotalDistance();
+		
+		if (cost < min) {
+			min = cost;
+			greedyBestPath = antsVector[i].getAntPath();
+		}
+
+		for (int j = 0; j < greedyBestPath.size() - 1; j++) {
+			pheromoneMatrix[greedyBestPath[j]][greedyBestPath[j + 1]] += (double)Qcycl / cost;
+		}
+	}
+}
+
 void reducePheromone() {
-	for (int i = 0; i < pheromoneMatrix.size(); i++) {
-		for (int j = 0; j < pheromoneMatrix.size(); j++) {
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
 			pheromoneMatrix[i][j] *= (1 - evaporation);
 		}
 	}
 }
 
-void initPheromoneMatirx()
-{
-	for (int i = 0; i < pheromoneMatrix.size(); i++) {
-		for (int j = 0; j < pheromoneMatrix.size(); j++) {
-			pheromoneMatrix[i][j] = INITIAL_PHERO_VALUE;
+int chooseCity(int antIndex) {
+	int currentCity = antsVector[antIndex].getCurrentCity();
+	if (getRandomFloat(0.01, 0.5) < RANDOM_PR_VALUE) {
+
+		int maxU = -1;
+		double maxV = -1;
+
+		for (int i = 0; i < N; i++) {
+			if (antsVector[antIndex].checkIfCityIsVisited(i)) {
+				continue;
+			}
+			double tmp = pow(pheromoneMatrix[currentCity][i], alpha) * pow(1.0 / cities[currentCity][i], beta);
+			if (tmp > maxV) {
+				maxV = tmp;
+				maxU = i;
+			}
+		}
+		return maxU;
+	}
+
+	calculateProbabilityOfChoosingCity(antIndex);
+	float tmp = getRandomFloat(0.45, 1.0);
+	while (true) {
+		int index = rand() % N;
+		float probabilities = probability[index];
+
+		if (probabilities >= tmp && !antsVector[antIndex].checkIfCityIsVisited(index)) {
+			return index;
+		}
+
+		if (probabilities != 0.0) {
+			probability[index] += 0.2;
 		}
 	}
 }
 
-void initAntsVector()
-{
-	antsVector.resize(N);
-	int i = 0;
-	for (Ant ant : antsVector) {
-		Ant tmpAnt = Ant(N, i++);
-		ant = tmpAnt;
+void calculateProbabilityOfChoosingCity(int antIndex) {
+	int currentCity = antsVector[antIndex].getCurrentCity();
+	double nominator = 0.0;
+	double denominator = 0.0;
+	for (int i = 0; i < N; i++) {
+		if (antsVector[antIndex].getCurrentCity() == i) continue;
+		if (antsVector[antIndex].checkIfCityIsVisited(i)) continue;
+
+		double tau = (double) pow(pheromoneMatrix[currentCity][i], alpha);
+		double eta;
+		if (cities[currentCity][i] != 0) {
+			 eta = (double)pow(1.0 / cities[currentCity][i], beta);
+		} 
+		else {
+			 eta = (double)pow(1.0 / 0.1, beta);
+		}
+		denominator += tau * eta;
 	}
+
+	for (int i = 0; i < N; i++) {
+		if (antsVector[antIndex].checkIfCityIsVisited(i)) {
+			probability[i] = 0.0;
+		}
+		else if(cities[currentCity][i] != 0) {
+			nominator = pow(pheromoneMatrix[currentCity][i], alpha) * pow(1.0 / cities[currentCity][i], beta);
+			probability[i] = nominator / denominator;
+		}
+		else if (cities[currentCity][i] == 0) {
+			nominator = pow(pheromoneMatrix[currentCity][i], alpha) * pow(1.0 / 0.001, beta);
+			probability[i] = nominator / denominator;
+		}
+	}
+}
+
+float getRandomFloat(float a, float b)
+{
+	static std::default_random_engine e;
+	static std::uniform_real_distribution<> dis(a, b); 
+	return dis(e);
+}
+
+std::vector<int> randomPathPermutation()
+{
+	std::vector<int> tempToSwap(N);
+	int iter = 0;
+	for (auto i = 0; i < N; i++) {
+		tempToSwap[i] = i;
+	}
+	std::random_shuffle(tempToSwap.begin(), tempToSwap.end());
+	return tempToSwap;
+}
+
+int calculateDistance(std::vector<int> path)
+{
+	int cost = 0;
+
+	for (auto i = 0; i < path.size() - 1; i++) {
+		cost += cities[path[i]][path[i + 1]];
+	}
+	cost += cities[path[N - 1]][path[0]];
+
+	return cost;
 }
 
 void loadINIFile()
@@ -232,12 +329,18 @@ void loadINIFile()
 				for (auto a : optimalPath)
 					std::cout << a << " ";
 				std::cout << "\n";
+				bestPath.clear();
+				bestCost = INT_MAX;
 
 				counter[i] = std::clock();
-				//solution[i] = simulatedAnnealing(cities, pow(N, 2), coolingRate, 3 * N, N * 2, optimalSolution);
+				solution[i] = startAntColonyAlgorithm(100);
 				timer[i] = (std::clock() - counter[i]) / (double)CLOCKS_PER_SEC;
-				//pathResult[i] = bestPath;
-				//error[i] = calculateRelativeError(solution[i], optimalSolution);
+				pathResult[i] = bestPath;
+				error[i] = calculateRelativeError(solution[i], optimalSolution);
+				std::cout << "Znaleziona droga: ";
+				for (auto a : bestPath)
+					std::cout << a << " ";
+				std::cout << "\n";
 				std::cout << "Wynik: " << solution[i] << "\n";
 				std::cout << "Czas wykonania: " << timer[i] << "\n";
 				std::cout << "Blad: " << error[i] << " [%]" << std::endl;
@@ -255,7 +358,7 @@ void saveToCsv(std::string txtFileName, int iterations, int optimalSolution, std
 	double* timer, int* solution, double* error)
 {
 	std::fstream file;
-	std::string fileName = "test_out_AC.csv";
+	std::string fileName = "test_out_AC_alpha_" + std::to_string(alpha) + "_beta_" + std::to_string(beta) + "_evap_"+std::to_string(evaporation) + "_CAS.csv";
 
 	file.open(fileName, std::ios::out | std::ios::app);
 
@@ -284,6 +387,7 @@ void loadFromFile(std::string fileName)
 	std::fstream file;
 	int weight;
 	std::vector<std::vector<int>> tmpVec;
+	std::vector<std::vector<double>> tmpPheromoneMatrix;
 	file.open(fileName, std::ios::in);
 	if (file.good() == false) {
 		std::cout << "Nie udalo sie otworzyc pliku!\n";
@@ -293,8 +397,10 @@ void loadFromFile(std::string fileName)
 		path.resize(N);
 		for (int i = 0; i < N; i++) {
 			tmpVec.push_back(std::vector<int>());
+			tmpPheromoneMatrix.push_back(std::vector<double>());
 			for (int j = 0; j < N; j++) {
 				file >> weight;
+				tmpPheromoneMatrix[i].push_back(0);
 				if (i != j) {
 					tmpVec[i].push_back(weight);
 				}
@@ -305,6 +411,7 @@ void loadFromFile(std::string fileName)
 		}
 	}
 	cities = tmpVec;
+	pheromoneMatrix = tmpPheromoneMatrix;
 	file.close();
 }
 

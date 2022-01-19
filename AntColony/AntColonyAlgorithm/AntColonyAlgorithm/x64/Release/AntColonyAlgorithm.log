@@ -1,0 +1,17 @@
+﻿  AntColonyAlgorithm.cpp
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(58,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(178,5): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(197,38): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(200,23): warning C4244: 'initializing': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=double
+          ]
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(250,12): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\AntColonyAlgorithm\AntColonyAlgorithm.cpp(281,6): warning C4101: 'weight': unreferenced local variable
+  Generating code
+  3 of 882 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    2 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  AntColonyAlgorithm.vcxproj -> E:\Studia\Semestr 5\Projektowanie efektywnych algorytmów\Zadanie 4 5 7\AntColony\AntColonyAlgorithm\x64\Release\AntColonyAlgorithm.exe

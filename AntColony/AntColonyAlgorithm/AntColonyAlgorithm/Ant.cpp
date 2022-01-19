@@ -6,10 +6,12 @@ Ant::Ant(int n, int initialCity) {
 	setInitialCity(initialCity);
 	setCurrentCity(initialCity);
 	setSize(n);
+	totalDistance = 0;
 
 	std::vector<int> tmp;
 	std::vector<bool> tmpB(getSize(), false);
 	tmpB[initialCity] = true;
+	tmp.push_back(initialCity);
 
 	setAntPath(tmp);
 	setAntVisitedCities(tmpB);
@@ -40,7 +42,16 @@ bool Ant::checkIfCityIsVisited(int city)
 
 bool Ant::checkIfAllCitiesAreVisited()
 {
-	return antPath.size() == getSize() + 1;
+	std::vector<int> tmpPath = getAntPath();
+	return tmpPath.size() == getSize();
+}
+
+void Ant::clear()
+{
+	for (bool visited : antVisitedCities) {
+		visited = false;
+	}
+	antPath.clear();
 }
 
 void Ant::setAntPath(std::vector<int> antPath)

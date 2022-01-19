@@ -18,6 +18,7 @@ public:
 	void calculateTotalDistance(int distance);
 	bool checkIfCityIsVisited(int city);
 	bool checkIfAllCitiesAreVisited();
+	void clear();
 
 	void setAntPath(std::vector<int> antPath);
 	std::vector<int> getAntPath();
